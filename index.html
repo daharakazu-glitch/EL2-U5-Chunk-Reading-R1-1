@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Practice: Unit 5 Reading 1 (Part 1)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Noto+Serif:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #f8fafc; }
+        .font-english { font-family: "Times New Roman", Times, "Noto Serif", serif; }
+        .font-japanese { font-family: "UD Digital Kyokasho-tai-R", "UD Digi Kyokasho N-R", "BIZ UDPGothic", "Hiragino Maru Gothic ProN", sans-serif; }
+
+        .boxed-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.4em;
+            height: 1.4em;
+            border: 2px solid #1e293b;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 0.85em;
+            font-weight: bold;
+            line-height: 1;
+            vertical-align: middle;
+            color: #1e293b;
+        }
+
+        .blank-container {
+            display: inline-flex; align-items: center; justify-content: flex-start;
+            height: 2.4em; background-color: #f1f5f9;
+            border-radius: 6px; padding: 0 10px; margin: 4px 3px; vertical-align: middle;
+            color: #64748b; font-weight: bold; font-size: 1em; cursor: pointer; border-bottom: none;
+            transition: all 0.2s ease; user-select: none;
+        }
+        .blank-container:hover { background-color: #e2e8f0; }
+
+        .blank-container.revealed {
+            justify-content: center; background-color: #ffffff !important;
+            color: #ef4444; border: 2px solid #ef4444; 
+            min-width: auto !important; 
+            padding: 0 12px; margin: 2px 3px;
+            cursor: pointer;
+        }
+
+        .blank-container.target-sentence {
+            background-color: #fffbeb; 
+            color: #d97706;
+        }
+        .blank-container.target-sentence.revealed {
+            color: #ef4444; border-color: #ef4444; background-color: #ffffff !important;
+        }
+
+        .paren { color: #94a3b8; font-size: 1.1em; }
+        .hint-text { margin-left: 4px; white-space: nowrap; }
+        .paren-right { margin-left: auto; }
+
+        .row-container { transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .row-container.active-row { background-color: #eff6ff !important; border-left-color: #3b82f6; }
+
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .pulse-recording { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } 
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-10">
+
+    <nav class="bg-slate-800 text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-book-open text-2xl text-blue-400"></i>
+                <h1 class="text-xl font-bold leading-tight font-english">Unit 5 Reading 1 (Part 1) The Rise of the Gap Year</h1>
+            </div>
+            
+            <div class="flex items-center gap-3 flex-wrap justify-center">
+                <div class="flex items-center gap-2 bg-slate-700 p-1.5 rounded-full border border-slate-600">
+                    <button id="btn-record" onclick="toggleRecording()" class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition shadow-sm" title="Record Audio">
+                        <i id="record-icon" class="fas fa-microphone text-sm"></i>
+                    </button>
+                    <div id="audio-player-container" class="hidden">
+                        <audio id="audio-playback" controls class="h-8 w-32"></audio>
+                    </div>
+                </div>
+
+                <div class="text-sm font-medium bg-slate-700 px-4 py-1.5 rounded-full border border-slate-600">
+                    <span id="progress-text" class="text-blue-400 font-bold">0/0</span> Revealed
+                </div>
+
+                <button id="btn-reveal-all" onclick="revealAll()" class="px-4 py-1.5 rounded-full bg-slate-600 hover:bg-slate-500 text-white font-medium text-sm transition-all shadow-sm border border-slate-500">
+                    Show All
+                </button>
+                <button id="btn-reveal-next" onclick="revealNext()" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500 hover:bg-blue-400 text-white font-bold text-sm shadow-sm transition-all border border-blue-400">
+                    <span>Next Answer</span>
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sticky top-[136px] md:top-[72px] z-40 bg-f8fafc/95 backdrop-blur-sm transition-all border-b border-slate-200 shadow-sm py-3">
+        <div class="max-w-7xl mx-auto px-4 flex flex-wrap gap-3 justify-center md:justify-end items-center">
+            <div class="flex items-center bg-white rounded-full border border-slate-300 p-1 shadow-sm">
+                <button id="btn-play-all" onclick="togglePlayPause()" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition font-medium text-sm w-24 justify-center">
+                    <i id="play-icon" class="fas fa-play"></i> <span id="play-text">Play</span>
+                </button>
+                <button id="btn-stop-all" onclick="stopAudio()" class="flex items-center gap-2 px-4 py-1.5 rounded-full text-slate-600 hover:bg-slate-100 transition font-medium text-sm ml-1" title="Reset Audio">
+                    <i class="fas fa-stop"></i> <span>Reset</span>
+                </button>
+            </div>
+            <div class="h-6 w-px bg-slate-300 mx-1 hidden md:block"></div>
+            <button id="btn-toggle-jp" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition font-medium text-sm shadow-sm font-japanese">
+                <i class="fas fa-language text-lg text-slate-500"></i> <span>日本語: <b class="text-blue-600">ON</b></span>
+            </button>
+            <button onclick="resetApp()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition font-medium text-sm shadow-sm font-japanese">
+                <i class="fas fa-redo text-slate-500"></i> Reset
+            </button>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <div class="bg-white shadow-md rounded-xl overflow-hidden border border-slate-200">
+            <div class="hidden md:flex bg-slate-100 border-b border-slate-300 text-sm font-bold text-slate-600">
+                <div class="flex-[3] p-4 border-r border-slate-200 font-english">English Text</div>
+                <div class="flex-[2] p-4 font-japanese">Japanese Meaning</div>
+            </div>
+            <div id="app" class="divide-y divide-slate-200"></div>
+        </div>
+    </main>
+
+    <script>
+        const chunks = [
+            { id: 1, pre: "Irish Mercury Weekend Edition", blank: null, post: "", jp: "アイリッシュ・マーキュリー週末版", hint: "" },
+            { id: 2, pre: "The ", blank: "Rise", post: " of the Gap Year", jp: "ギャップ・イヤーの台頭", hint: "(R)" },
+            { id: 3, pre: "By Niamh Ryan", blank: null, post: "", jp: "ニーヴ・ライアン著", hint: "" },
+            { id: 4, pre: "August 05 2023 06:33 AM", blank: null, post: "", jp: "2023年8月5日 午前6時33分", hint: "" },
+            { id: 5, pre: "<span class='boxed-num'>1</span> ", blank: "Young people across our country,", post: "", jp: "国中の若者たちが、", hint: "( )", isTarget: true },
+            { id: 6, pre: "", blank: "exhausted from the stress of exams,", post: "", jp: "試験のストレスで疲れ果てて、", hint: "( )", isTarget: true },
+            { id: 7, pre: "", blank: "are increasingly choosing to take a year off", post: "", jp: "1年間休むという選択をすることがますます増えている", hint: "( )", isTarget: true },
+            { id: 8, pre: "", blank: "before moving on to further study.", post: "", jp: "さらなる勉強へとコマを進める前に。", hint: "( )", isTarget: true },
+            { id: 9, pre: "", blank: "While", post: " stories of young people taking gap years", jp: "ギャップ・イヤーを利用する若者の話は", hint: "(W)" },
+            { id: 10, pre: "have long been ", blank: "common", post: "", jp: "一般的になって久しいが、", hint: "(c)" },
+            { id: 11, pre: "in countries ", blank: "such as", post: " the UK and Australia,", jp: "イギリスやオーストラリアのような国々では、", hint: "( )( )" },
+            { id: 12, pre: "Ireland has taken ", blank: "much longer", post: " to catch on.", jp: "アイルランドは取り入れるのにずいぶん長い時間がかかった。", hint: "( )( )" },
+            { id: 13, pre: "But", blank: null, post: "", jp: "しかし", hint: "" },
+            { id: 14, pre: "is this trend really all ", blank: "positive", post: "?", jp: "この流行は本当に好ましいことばかりなのだろうか。", hint: "(p)" },
+            { id: 15, pre: "<span class='boxed-num'>2</span> ", blank: "It's not just here in Ireland that gap years", post: "", jp: "ギャップ・イヤーが増加しているのはここアイル", hint: "( )", isTarget: true },
+            { id: 16, pre: "", blank: "are on the rise.", post: "", jp: "ランドだけではない。", hint: "( )", isTarget: true },
+            { id: 17, pre: "Some top colleges in the USA", blank: null, post: "", jp: "アメリカ合衆国の一流大学の中には", hint: "" },
+            { id: 18, pre: "are ", blank: "encouraging", post: " their students ", blank2: "to", post2: " take one", jp: "それらの学生がギャップ・イヤーを取ることを奨励しているところもある", hint: "(en)", hint2: "( )" },
+            { id: 19, pre: "before beginning their university studies.", blank: null, post: "", jp: "彼らの大学での勉強を始める前に。", hint: "" },
+            { id: 20, pre: "These universities ", blank: "mention", post: " benefits", jp: "これらの大学は利点に言及している", hint: "(m)" },
+            { id: 21, pre: "", blank: "such as", post: " students with an increased ", blank2: "sense of", post2: "", jp: "高まった自立心や成熟の感覚を持つ学生といった", hint: "( )( )", hint2: "(s)( )" },
+            { id: 22, pre: "", blank: "independence", post: " and maturity", jp: "", hint: "(in)" },
+            { id: 23, pre: "", blank: "as", post: " a reason ", blank2: "for", post2: " encouraging gap years.", jp: "ギャップ・イヤーを奨励することに対する理由として。", hint: "( )", hint2: "( )" },
+            { id: 24, pre: "", blank: "Despite", post: " this,", jp: "これにもかかわらず、", hint: "(D)" },
+            { id: 25, pre: "", blank: "less than", post: " 2% of students at top colleges", jp: "2%に満たない一流大学の学生たちが", hint: "(l)( )" },
+            { id: 26, pre: "have taken one.", blank: null, post: "", jp: "ギャップ・イヤーを取っているにすぎない。", hint: "" }
+        ];
+
+        let state = {
+            jpVisible: true,
+            blanks: [], 
+            mediaRecorder: null,
+            audioChunks: [],
+            isRecording: false,
+            isPlayingAudio: false,
+            currentAudioIndex: -1,
+            preferredVoice: null,
+            audioTimer: null
+        };
+
+        const app = document.getElementById('app');
+        const progressText = document.getElementById('progress-text');
+        
+        function init() {
+            app.innerHTML = '';
+            state.blanks = [];
+            
+            chunks.forEach((chunk, index) => {
+                const row = document.createElement('div');
+                const bgClass = index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50';
+                row.className = `row-container flex flex-col md:flex-row md:items-stretch ${bgClass} border-l-8 border-l-transparent`;
+                row.id = `row-${chunk.id}`;
+
+                let sentenceHtml = `<span class="text-slate-800">${chunk.pre || ""}</span>`;
+                if(chunk.blank) sentenceHtml += createBlankHtml(chunk.id, chunk.blank, chunk.hint, chunk.isTarget);
+                if(chunk.post) sentenceHtml += `<span class="text-slate-800">${chunk.post || ""}</span>`;
+                if(chunk.blank2) sentenceHtml += createBlankHtml(chunk.id, chunk.blank2, chunk.hint2, chunk.isTarget);
+                if(chunk.post2) sentenceHtml += `<span class="text-slate-800">${chunk.post2}</span>`;
+                if(chunk.blank3) sentenceHtml += createBlankHtml(chunk.id, chunk.blank3, chunk.hint3, chunk.isTarget);
+                if(chunk.post3) sentenceHtml += `<span class="text-slate-800">${chunk.post3}</span>`;
+
+                row.innerHTML = `
+                    <div class="flex-[3] p-6 md:border-r md:border-slate-200 flex items-center justify-between gap-4">
+                        <div class="text-3xl font-bold font-english leading-relaxed tracking-wide text-slate-900 w-full flex flex-wrap items-center">
+                            ${sentenceHtml}
+                        </div>
+                        <button onclick="playChunkAudio(${index})" class="shrink-0 w-12 h-12 rounded-full bg-slate-100 text-slate-500 hover:bg-blue-100 hover:text-blue-600 flex items-center justify-center transition border border-slate-200" title="Play line audio">
+                            <i class="fas fa-volume-up text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="flex-[2] p-6 flex items-center">
+                        <p class="jp-text text-slate-700 text-xl font-bold leading-relaxed font-japanese transition-opacity duration-300 ${state.jpVisible ? 'opacity-100' : 'opacity-0 select-none'}">${chunk.jp}</p>
+                    </div>
+                `;
+                app.appendChild(row);
+            });
+
+            const blankEls = document.querySelectorAll('.blank-container');
+            blankEls.forEach((el, idx) => {
+                el.onclick = () => revealSpecific(idx);
+                state.blanks[idx].element = el;
+            });
+
+            updateProgress();
+            setupVoice();
+        }
+
+        function setupVoice() {
+            const setVoice = () => {
+                const voices = window.speechSynthesis.getVoices();
+                state.preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))) 
+                                      || voices.find(v => v.lang.startsWith('en-US')) 
+                                      || voices.find(v => v.lang.startsWith('en'));
+            };
+            if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                window.speechSynthesis.onvoiceschanged = setVoice;
+            }
+            setVoice();
+        }
+
+        function getBlankWidth(word) {
+            if (!word) return '100px';
+            const len = word.length;
+            if (len <= 2) return '75px';   
+            if (len <= 5) return '130px';  
+            if (len <= 10) return '180px';  
+            if (len <= 20) return '260px';
+            return '380px';                
+        }
+
+        function createBlankHtml(chunkId, word, hint, isTarget = false) {
+            const hintParts = hint ? hint.match(/\([^\)]*\)/g) : null;
+            const wordParts = word ? word.trim().split(/\s+/) : [];
+            let html = "";
+            
+            if (hintParts && hintParts.length > 1 && wordParts.length === hintParts.length) {
+                for (let i = 0; i < hintParts.length; i++) {
+                    html += generateSingleBlank(chunkId, wordParts[i], hintParts[i], isTarget);
+                }
+            } else {
+                html += generateSingleBlank(chunkId, word, hint, isTarget);
+            }
+            return html;
+        }
+
+        function generateSingleBlank(chunkId, word, hint, isTarget = false) {
+            let displayHint = hint ? (hint.startsWith('(') && hint.endsWith(')') ? hint.slice(1, -1).trim() : hint.trim()) : '';
+            state.blanks.push({ chunkId: chunkId, word: word, hint: displayHint, isTarget: isTarget, isRevealed: false, element: null });
+            
+            let classes = "blank-container text-3xl font-bold font-english" + (isTarget ? " target-sentence" : "");
+            const dynamicWidth = getBlankWidth(word);
+            
+            return `<span class="${classes}" style="min-width: ${dynamicWidth}">
+                        <span class="paren">(</span>
+                        <span class="hint-text">${displayHint}</span>
+                        <span class="paren paren-right">)</span>
+                    </span>`;
+        }
+
+        function revealNext() {
+            const nextIndex = state.blanks.findIndex(b => !b.isRevealed);
+            if (nextIndex === -1) return; 
+            const target = state.blanks[nextIndex];
+            revealBlank(target);
+            highlightRow(target.chunkId);
+            updateProgress();
+        }
+
+        function revealAll() {
+            state.blanks.forEach(blankObj => {
+                if (!blankObj.isRevealed) {
+                    revealBlank(blankObj);
+                }
+            });
+            updateProgress();
+        }
+
+        function revealSpecific(index) {
+            const target = state.blanks[index];
+            if (target.isRevealed) {
+                hideBlank(target);
+            } else {
+                revealBlank(target);
+            }
+            highlightRow(target.chunkId);
+            updateProgress();
+        }
+
+        function revealBlank(blankObj) {
+            const el = blankObj.element;
+            if(!el) return;
+            blankObj.isRevealed = true;
+            el.innerHTML = blankObj.word;
+            el.className = "blank-container revealed text-3xl font-bold font-english fade-in" + (blankObj.isTarget ? ' target-sentence' : '');
+        }
+
+        function hideBlank(blankObj) {
+            const el = blankObj.element;
+            if(!el) return;
+            blankObj.isRevealed = false;
+            el.className = "blank-container text-3xl font-bold font-english" + (blankObj.isTarget ? ' target-sentence' : '');
+            el.innerHTML = `<span class="paren">(</span><span class="hint-text">${blankObj.hint}</span><span class="paren paren-right">)</span>`;
+        }
+
+        function highlightRow(chunkId) {
+            document.querySelectorAll('.row-container').forEach(r => r.classList.remove('active-row'));
+            const row = document.getElementById(`row-${chunkId}`);
+            if(row) {
+                row.classList.add('active-row');
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function updateProgress() {
+            const revealedCount = state.blanks.filter(b => b.isRevealed).length;
+            progressText.innerText = `${revealedCount}/${state.blanks.length}`;
+            const btn = document.getElementById('btn-reveal-next');
+            if(revealedCount >= state.blanks.length && state.blanks.length > 0) {
+                btn.classList.add('bg-green-600', 'hover:bg-green-700', 'border-green-500');
+                btn.classList.remove('bg-blue-500', 'hover:bg-blue-400', 'border-blue-400');
+                btn.innerHTML = '<i class="fas fa-check"></i> Complete!';
+            } else {
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700', 'border-green-500');
+                btn.classList.add('bg-blue-500', 'hover:bg-blue-400', 'border-blue-400');
+                btn.innerHTML = '<span>Next Answer</span><i class="fas fa-chevron-right text-xs"></i>';
+            }
+        }
+
+        function resetApp() {
+            stopAudio();
+            init();
+            const btn = document.getElementById('btn-record');
+            const icon = document.getElementById('record-icon');
+            const playerContainer = document.getElementById('audio-player-container');
+            if(state.isRecording && state.mediaRecorder) {
+                state.mediaRecorder.stop();
+                state.isRecording = false;
+            }
+            btn.classList.add('bg-red-100', 'text-red-600');
+            btn.classList.remove('bg-red-600', 'text-white', 'pulse-recording');
+            icon.className = "fas fa-microphone text-sm";
+            playerContainer.classList.add('hidden');
+        }
+
+        async function toggleRecording() {
+            const btn = document.getElementById('btn-record');
+            const icon = document.getElementById('record-icon');
+            const playerContainer = document.getElementById('audio-player-container');
+            const audioEl = document.getElementById('audio-playback');
+
+            if (!state.isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    state.mediaRecorder = new MediaRecorder(stream);
+                    state.audioChunks = [];
+                    state.mediaRecorder.ondataavailable = event => state.audioChunks.push(event.data);
+                    state.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(state.audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioEl.src = audioUrl;
+                        playerContainer.classList.remove('hidden');
+                    };
+                    state.mediaRecorder.start();
+                    state.isRecording = true;
+                    btn.classList.remove('bg-red-100', 'text-red-600');
+                    btn.classList.add('bg-red-600', 'text-white', 'pulse-recording');
+                    icon.className = "fas fa-stop text-sm";
+                    playerContainer.classList.add('hidden'); 
+                } catch (err) {
+                    alert("Mic access denied.");
+                }
+            } else {
+                if (state.mediaRecorder) state.mediaRecorder.stop();
+                state.isRecording = false;
+                btn.classList.add('bg-red-100', 'text-red-600');
+                btn.classList.remove('bg-red-600', 'text-white', 'pulse-recording');
+                icon.className = "fas fa-microphone text-sm";
+            }
+        }
+
+        function togglePlayPause() {
+            if (state.isPlayingAudio) {
+                window.speechSynthesis.cancel();
+                state.isPlayingAudio = false;
+                updatePlayBtnUI(false);
+                if (state.audioTimer) clearInterval(state.audioTimer);
+            } else {
+                if (state.currentAudioIndex === -1) state.currentAudioIndex = 0;
+                playNextChunk();
+            }
+        }
+
+        function playNextChunk() {
+            if (state.currentAudioIndex >= chunks.length || state.currentAudioIndex === -1) {
+                stopAudio();
+                return;
+            }
+            state.isPlayingAudio = true;
+            updatePlayBtnUI(true);
+            if (state.audioTimer) clearInterval(state.audioTimer);
+            state.audioTimer = setInterval(() => {
+                if (window.speechSynthesis.speaking) window.speechSynthesis.resume();
+            }, 10000);
+            const chunk = chunks[state.currentAudioIndex];
+            const text = getChunkText(chunk);
+            highlightRow(chunk.id);
+            window.speechSynthesis.cancel();
+            const ut = new SpeechSynthesisUtterance(text);
+            if (state.preferredVoice) ut.voice = state.preferredVoice;
+            ut.lang = 'en-US';
+            ut.rate = 0.85;
+            ut.onend = () => {
+                if (state.isPlayingAudio) {
+                    state.currentAudioIndex++;
+                    playNextChunk();
+                }
+            };
+            ut.onerror = (e) => {
+                if(e.error !== 'interrupted') stopAudio();
+            };
+            setTimeout(() => {
+                window.speechSynthesis.speak(ut);
+            }, 50);
+        }
+
+        function playChunkAudio(index) {
+            stopAudio();
+            const chunk = chunks[index];
+            const text = getChunkText(chunk);
+            highlightRow(chunk.id);
+            const ut = new SpeechSynthesisUtterance(text);
+            if (state.preferredVoice) ut.voice = state.preferredVoice;
+            ut.lang = 'en-US';
+            ut.rate = 0.85;
+            window.speechSynthesis.speak(ut);
+        }
+
+        function stopAudio() {
+            window.speechSynthesis.cancel();
+            if (state.audioTimer) clearInterval(state.audioTimer);
+            state.isPlayingAudio = false;
+            state.currentAudioIndex = -1;
+            updatePlayBtnUI(false);
+            document.querySelectorAll('.row-container').forEach(r => r.classList.remove('active-row'));
+        }
+
+        function updatePlayBtnUI(isPlaying) {
+            const btn = document.getElementById('btn-play-all');
+            const icon = document.getElementById('play-icon');
+            const text = document.getElementById('play-text');
+            if (isPlaying) {
+                icon.className = "fas fa-pause";
+                text.innerText = "Pause";
+                btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            } else {
+                icon.className = "fas fa-play";
+                text.innerText = "Play";
+                btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }
+        }
+
+        function getChunkText(chunk) {
+            let fullHtml = (chunk.pre || "") + " " + (chunk.blank || "") + " " + (chunk.post || "");
+            if(chunk.blank2) fullHtml += " " + chunk.blank2 + " " + (chunk.post2 || "");
+            if(chunk.blank3) fullHtml += " " + chunk.blank3 + " " + (chunk.post3 || "");
+            const temp = document.createElement("div");
+            temp.innerHTML = fullHtml;
+            const boxed = temp.querySelectorAll('.boxed-num');
+            boxed.forEach(el => el.remove());
+            return temp.innerText.replace(/\s+/g, ' ').trim();
+        }
+
+        document.getElementById('btn-toggle-jp').addEventListener('click', () => { 
+            state.jpVisible = !state.jpVisible; 
+            const s = document.getElementById('btn-toggle-jp').querySelector('b');
+            const els = document.querySelectorAll('.jp-text');
+            if(state.jpVisible) {
+                s.innerText = "ON"; s.className = "text-blue-600";
+                els.forEach(e => { e.classList.remove('opacity-0', 'select-none'); e.classList.add('opacity-100'); });
+            } else {
+                s.innerText = "OFF"; s.className = "text-gray-400";
+                els.forEach(e => { e.classList.remove('opacity-100'); e.classList.add('opacity-0', 'select-none'); });
+            }
+        });
+        
+        init();
+    </script>
+</body>
+</html>
