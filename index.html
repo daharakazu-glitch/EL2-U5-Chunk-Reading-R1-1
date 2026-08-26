@@ -141,18 +141,18 @@
             { id: 2, pre: "The ", blank: "Rise", post: " of the Gap Year", jp: "ギャップ・イヤーの台頭", hint: "(R)" },
             { id: 3, pre: "By Niamh Ryan", blank: null, post: "", jp: "ニーヴ・ライアン著", hint: "" },
             { id: 4, pre: "August 05 2023 06:33 AM", blank: null, post: "", jp: "2023年8月5日 午前6時33分", hint: "" },
-            { id: 5, pre: "<span class='boxed-num'>1</span> ", blank: "Young people across our country,", post: "", jp: "国中の若者たちが、", hint: "( )", isTarget: true },
-            { id: 6, pre: "", blank: "exhausted from the stress of exams,", post: "", jp: "試験のストレスで疲れ果てて、", hint: "( )", isTarget: true },
-            { id: 7, pre: "", blank: "are increasingly choosing to take a year off", post: "", jp: "1年間休むという選択をすることがますます増えている", hint: "( )", isTarget: true },
-            { id: 8, pre: "", blank: "before moving on to further study.", post: "", jp: "さらなる勉強へとコマを進める前に。", hint: "( )", isTarget: true },
+            { id: 5, pre: "<span class='boxed-num'>1</span> ", blank: "Young people across our country,", post: "", jp: "国中の若者たちが、", hint: "( )( )( )( )( )", isTarget: true },
+            { id: 6, pre: "", blank: "exhausted from the stress of exams,", post: "", jp: "試験のストレスで疲れ果てて、", hint: "( )( )( )( )( )( )", isTarget: true },
+            { id: 7, pre: "", blank: "are increasingly choosing to take a year off", post: "", jp: "1年間休むという選択をすることがますます増えている", hint: "( )( )( )( )( )( )( )( )", isTarget: true },
+            { id: 8, pre: "", blank: "before moving on to further study.", post: "", jp: "さらなる勉強へとコマを進める前に。", hint: "( )( )( )( )( )( )", isTarget: true },
             { id: 9, pre: "", blank: "While", post: " stories of young people taking gap years", jp: "ギャップ・イヤーを利用する若者の話は", hint: "(W)" },
             { id: 10, pre: "have long been ", blank: "common", post: "", jp: "一般的になって久しいが、", hint: "(c)" },
             { id: 11, pre: "in countries ", blank: "such as", post: " the UK and Australia,", jp: "イギリスやオーストラリアのような国々では、", hint: "( )( )" },
             { id: 12, pre: "Ireland has taken ", blank: "much longer", post: " to catch on.", jp: "アイルランドは取り入れるのにずいぶん長い時間がかかった。", hint: "( )( )" },
             { id: 13, pre: "But", blank: null, post: "", jp: "しかし", hint: "" },
             { id: 14, pre: "is this trend really all ", blank: "positive", post: "?", jp: "この流行は本当に好ましいことばかりなのだろうか。", hint: "(p)" },
-            { id: 15, pre: "<span class='boxed-num'>2</span> ", blank: "It's not just here in Ireland that gap years", post: "", jp: "ギャップ・イヤーが増加しているのはここアイル", hint: "( )", isTarget: true },
-            { id: 16, pre: "", blank: "are on the rise.", post: "", jp: "ランドだけではない。", hint: "( )", isTarget: true },
+            { id: 15, pre: "<span class='boxed-num'>2</span> ", blank: "It's not just here in Ireland that gap years", post: "", jp: "ギャップ・イヤーが増加しているのはここアイル", hint: "( )( )( )( )( )( )( )( )( )", isTarget: true },
+            { id: 16, pre: "", blank: "are on the rise.", post: "", jp: "ランドだけではない。", hint: "( )( )( )( )", isTarget: true },
             { id: 17, pre: "Some top colleges in the USA", blank: null, post: "", jp: "アメリカ合衆国の一流大学の中には", hint: "" },
             { id: 18, pre: "are ", blank: "encouraging", post: " their students ", blank2: "to", post2: " take one", jp: "それらの学生がギャップ・イヤーを取ることを奨励しているところもある", hint: "(en)", hint2: "( )" },
             { id: 19, pre: "before beginning their university studies.", blank: null, post: "", jp: "彼らの大学での勉強を始める前に。", hint: "" },
@@ -238,13 +238,13 @@
         }
 
         function getBlankWidth(word) {
-            if (!word) return '100px';
+            if (!word) return '75px';
             const len = word.length;
-            if (len <= 2) return '75px';   
-            if (len <= 5) return '130px';  
-            if (len <= 10) return '180px';  
-            if (len <= 20) return '260px';
-            return '380px';                
+            if (len <= 2) return '65px';   
+            if (len <= 5) return '90px';  
+            if (len <= 8) return '120px';  
+            if (len <= 12) return '150px';
+            return '180px';                
         }
 
         function createBlankHtml(chunkId, word, hint, isTarget = false) {
@@ -255,6 +255,11 @@
             if (hintParts && hintParts.length > 1 && wordParts.length === hintParts.length) {
                 for (let i = 0; i < hintParts.length; i++) {
                     html += generateSingleBlank(chunkId, wordParts[i], hintParts[i], isTarget);
+                }
+            } else if (wordParts.length > 1) {
+                for (let i = 0; i < wordParts.length; i++) {
+                    const h = (hintParts && hintParts[i]) ? hintParts[i] : "( )";
+                    html += generateSingleBlank(chunkId, wordParts[i], h, isTarget);
                 }
             } else {
                 html += generateSingleBlank(chunkId, word, hint, isTarget);
